@@ -14,4 +14,4 @@ class Message(BaseModel):
     presence_penalty: Optional[float] = Field(default=0.0, description="Presence penalty")
     frequency_penalty: Optional[float] = Field(default=0.0, description="Frequency penalty")
     logit_bias: Optional[dict] = Field(default=dict())
-    user: Optional[str]
+    user: Optional[str] = Field(default='')
