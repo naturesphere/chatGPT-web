@@ -31,7 +31,7 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
         response = await openai.ChatCompletion.acreate(**message.dict(), timeout=30)
         return response
     except Exception as e:
-        return e
+        return str(e)
 
 
 if __name__ == '__main__':
