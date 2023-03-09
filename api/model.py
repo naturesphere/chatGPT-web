@@ -4,14 +4,14 @@ from pydantic import BaseModel, Field
 
 
 class Message(BaseModel):
-    model: Optional[str] = Field(default="text-davinci-003", description="Model name")
-    prompt: str = Field(..., description="Prompt text")
+    model: Optional[str] = Field(default="gpt-3.5-turbo", description="Model name")
+    messages: list = Field(..., description="Message")
+    temperature: Optional[float] = Field(default=1.0, description="Temperature")
+    top_p: Optional[int] = Field(default=1, description="Top p")
+    stream: Optional[bool] = Field(default=False, description='')
+    stop: Optional[str] = Field(default=None)
     max_tokens: Optional[int] = Field(default=2048, description="Maximum number of tokens")
-    temperature: Optional[float] = Field(default=0.5, description="Temperature")
-    frequency_penalty: Optional[float] = Field(default=0.0, description="Frequency penalty")
     presence_penalty: Optional[float] = Field(default=0.0, description="Presence penalty")
-    top_p: Optional[float] = Field(default=1.0, description="Top p")
-
-
-class Token(BaseModel):
-    api_key: Optional[str] = Field(default=None, description="API key")
+    frequency_penalty: Optional[float] = Field(default=0.0, description="Frequency penalty")
+    logit_bias: Optional[dict] = Field(default=None)
+    user: Optional[str]

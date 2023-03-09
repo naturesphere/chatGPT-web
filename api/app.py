@@ -1,50 +1,33 @@
 import os
-
-from fastapi import FastAPI, Request
+import openai
+from fastapi import FastAPI, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-
+from typing import Union
 from model import Message
-import api
+import aiohttp, asyncio
+
+API_KEY = os.environ.get('API_KEY')
 
 app = FastAPI()
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DIST_DIR = os.path.join(BASE_DIR, 'dist')
-ASSETS_DIR = os.path.join(DIST_DIR, 'assets')
-app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
-templates = Jinja2Templates(directory=DIST_DIR)
+def get_api_key(Authorization: str = None):
+    if Authorization:
+        api_key = Authorization.split()[-1]
+        if api_key.startswith('sk-'):
+            return api_key
+    return API_KEY
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-@app.get("/", response_class=HTMLResponse)
-async def root():
-    return templates.TemplateResponse("index.html", {"request": {}})
-
-
-@app.post("/completions")
-async def completions(request: Request, message: Message):
-    api_key = request.headers.get('api_key')
-    res = await api.completions(message, api_key=api_key)
-    return res
-
-
-@app.get("/credit_summary")
-async def credit_summary(request: Request):
-    api_key = request.headers.get('api_key')
-    res = await api.credit_summary(api_key=api_key)
-    return res
+@app.post('/v1/chat/completions')
+async def cc(message: Message, Authorization: Union[str, None] = Header(default=None)):
+    api_key = get_api_key(Authorization)
+    openai.api_key = api_key
+    response = await openai.ChatCompletion.acreate(**message.dict(), timeout=30)
+    return response
 
 
 if __name__ == '__main__':
