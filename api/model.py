@@ -13,5 +13,5 @@ class Message(BaseModel):
     max_tokens: Optional[int] = Field(default=2048, description="Maximum number of tokens")
     presence_penalty: Optional[float] = Field(default=0.0, description="Presence penalty")
     frequency_penalty: Optional[float] = Field(default=0.0, description="Frequency penalty")
-    logit_bias: Optional[dict] = Field(default=None)
+    logit_bias: Optional[dict] = Field(default={})
     user: Optional[str]
