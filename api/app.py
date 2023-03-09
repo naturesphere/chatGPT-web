@@ -27,8 +27,11 @@ def get_api_key(Authorization: str = None):
 async def cc(message: Message, Authorization: Union[str, None] = Header(default=None)):
     api_key = get_api_key(Authorization)
     openai.api_key = api_key
-    response = await openai.ChatCompletion.acreate(**message.dict(), timeout=30)
-    return response
+    try:
+        response = await openai.ChatCompletion.acreate(**message.dict(), timeout=30)
+        return response
+    except Exception as e:
+        return e
 
 
 if __name__ == '__main__':
