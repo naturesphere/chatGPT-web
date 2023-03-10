@@ -45,4 +45,4 @@ with gr.Blocks(css="#chatbot .overflow-y-auto{height:500px}") as demo:
     txt.submit(add_text, [log, messages, txt], [log, messages, chatbot])
     txt.submit(lambda: "", None, txt)
 #     btn.upload(add_image, [state, btn], [state, chatbot])
-demo.queue(100).launch(server_name='0.0.0.0', share=True)
+demo.queue(100).launch(server_name='0.0.0.0', share=False)
