@@ -8,9 +8,21 @@ from fastapi.responses import HTMLResponse
 from typing import Union
 from model import Message
 import aiohttp, asyncio
+import logging, os
+from logging.handlers import RotatingFileHandler
+import time
+
+file_handler = RotatingFileHandler('log.txt', mode='a',
+                                   maxBytes=1024 * 1024,
+                                   backupCount=2, encoding='utf8')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('[%(asctime)s-%(filename)s-%(levelname)s:%(message)s]'))
+logger = logging.getLogger(__file__)
+logger.setLevel(logging.INFO)
+logger.addHandler(file_handler)
 
 API_KEY = os.environ.get('API_KEY')
-print(API_KEY)
+logger.info(f'init api key:{API_KEY}')
 
 app = FastAPI()
 
@@ -28,7 +40,10 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
     api_key = get_api_key(Authorization)
     openai.api_key = api_key
     try:
-        response = await openai.ChatCompletion.acreate(**message.dict(), timeout=30)
+        tik = time.time()
+        response = await openai.ChatCompletion.acreate(**message.dict(), timeout=60)
+        tok = time.time()
+        logger.info(f'post api_key: {api_key}, elapsed: {tok-tik:.3f}s')
         return response
     except Exception as e:
         return str(e)
