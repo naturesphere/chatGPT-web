@@ -41,7 +41,7 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
     openai.api_key = api_key
     try:
         tik = time.time()
-        response = await openai.ChatCompletion.acreate(**message.dict(), timeout=60)
+        response = await openai.ChatCompletion.acreate(**message.dict(), timeout=0.1)
         tok = time.time()
         logger.info(f'post api_key: {api_key}, elapsed: {tok-tik:.3f}s')
         return response
