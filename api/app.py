@@ -39,14 +39,19 @@ def get_api_key(Authorization: str = None):
 async def cc(message: Message, Authorization: Union[str, None] = Header(default=None)):
     api_key = get_api_key(Authorization)
     openai.api_key = api_key
+    logger.info(f'post api_key: {api_key}')
+    logger.info(f'{message.messages}')
+    response = 'ERROR!!!'
     try:
         tik = time.time()
         response = await openai.ChatCompletion.acreate(**message.dict(), timeout=60)
         tok = time.time()
-        logger.info(f'post api_key: {api_key}, elapsed: {tok-tik:.3f}s')
-        return response
+        logger.info(f'{tok - tik:.3f}s')
     except Exception as e:
-        return str(e)
+        response = str(e)
+    finally:
+        logger.info(f'回复：{response}')
+        return response
 
 
 if __name__ == '__main__':
