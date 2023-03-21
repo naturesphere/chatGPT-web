@@ -15,7 +15,7 @@ import httpx
 
 file_handler = RotatingFileHandler('log.txt', mode='a',
                                    maxBytes=1024 * 1024,
-                                   backupCount=2, encoding='utf8')
+                                   backupCount=20, encoding='utf8')
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(logging.Formatter('[%(asctime)s-%(filename)s-%(levelname)s:%(message)s]'))
 logger = logging.getLogger(__file__)
@@ -47,11 +47,11 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
         tik = time.time()
         response = await openai.ChatCompletion.acreate(**message.dict(), timeout=60)
         tok = time.time()
-        logger.info(f'{tok - tik:.3f}s')
+        logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {response.json()['choices'][0]['message']}")
     except Exception as e:
         response = str(e)
+        logger.error(response)
     finally:
-        logger.info(f'回复：{response}')
         return response
 
 
