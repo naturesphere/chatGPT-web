@@ -11,6 +11,7 @@ import aiohttp, asyncio
 import logging, os
 from logging.handlers import RotatingFileHandler
 import time
+import httpx
 
 file_handler = RotatingFileHandler('log.txt', mode='a',
                                    maxBytes=1024 * 1024,
@@ -54,8 +55,21 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
         return response
 
 
+@app.get('/dashboard/billing/credit_grants')
+async def credit_summary(api_key=None):
+    """Get the credit summary for the API key."""
+    url = "https://api.openai.com/dashboard/billing/credit_grants"
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            url,
+            headers={"Authorization": f"Bearer {api_key}"},
+            timeout=60,
+        )
+        return response.json()
+
+
 if __name__ == '__main__':
     import uvicorn
 
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True,
+    uvicorn.run("app:app", host="0.0.0.0", port=8002, reload=True,
                 ssl_keyfile='./key.pem', ssl_certfile='./cert.pem')
