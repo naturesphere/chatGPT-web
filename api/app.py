@@ -42,17 +42,19 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
     openai.api_key = api_key
     logger.info(f'post api_key: {api_key}')
     logger.info(f'{message.messages}')
-    response = 'ERROR!!!'
+    dt = dict()
     try:
         tik = time.time()
         response = await openai.ChatCompletion.acreate(**message.dict(), timeout=60)
         tok = time.time()
-        logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {response.json()['choices'][0]['message']}")
+        dt = response.json()
+        logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {dt['choices'][0]['message']}")
     except Exception as e:
-        response = str(e)
-        logger.error(response)
+        se = str(e)
+        logger.error(se)
+        dt = {'error': se}
     finally:
-        return response
+        return dt
 
 
 @app.get('/dashboard/billing/credit_grants')
