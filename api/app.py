@@ -29,8 +29,11 @@ app = FastAPI()
 
 
 def get_api_key(Authorization: str = None):
+    bearer = 'Bearer'
     if Authorization:
         api_key = Authorization.split()[-1]
+        if api_key.startswith(bearer):
+            api_key = api_key[len(bearer):]
         if api_key.startswith('sk-'):
             return api_key
     return API_KEY
