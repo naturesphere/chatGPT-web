@@ -1,7 +1,7 @@
 import openai
 
 if __name__ == '__main__':
-    openai.api_key = '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 '
+    openai.api_key = ' '
     dt = {
         "model": "gpt-3.5-turbo",
         "messages": [{'role': 'user', 'content': '你好'}],
