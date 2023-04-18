@@ -33,16 +33,20 @@ def add_text(log, messages, text):
 #     return state, state
 
 
-with gr.Blocks(css="#chatbot .overflow-y-auto{height:500px}") as demo:
-    gr.HTML('<h1 align="center">基于ChatGPT封装接口的聊天机器人</h1>')
-    chatbot = gr.Chatbot(elem_id="chatbot")
-    messages = gr.State(
-        [{'role': 'system', 'content': '你的名字叫小之，是一个就职于之江实验室的智能机器人，属于智能机器人中心。'}])
-    log = gr.State([])
+# with gr.Blocks(css="#chatbot .overflow-y-auto{height:500px}") as demo:
+#     gr.HTML('<h1 align="center">基于ChatGPT封装接口的聊天机器人</h1>')
+#     chatbot = gr.Chatbot(elem_id="chatbot")
+#     messages = gr.State(
+#         [{'role': 'system', 'content': '你的名字叫小之，是一个就职于之江实验室的智能机器人，属于智能机器人中心。'}])
+#     log = gr.State([])
 
-    txt = gr.Textbox(show_label=False, placeholder="输入内容……").style(container=False)
+#     txt = gr.Textbox(show_label=False, placeholder="输入内容……").style(container=False)
 
-    txt.submit(add_text, [log, messages, txt], [log, messages, chatbot])
-    txt.submit(lambda: "", None, txt)
-#     btn.upload(add_image, [state, btn], [state, chatbot])
-demo.queue(100).launch(server_name='0.0.0.0', share=False)
+#     txt.submit(add_text, [log, messages, txt], [log, messages, chatbot])
+#     txt.submit(lambda: "", None, txt)
+# #     btn.upload(add_image, [state, btn], [state, chatbot])
+# demo.queue(100).launch(server_name='0.0.0.0', share=False)
+
+if __name__ == '__main__':
+    messages=[{'role': 'user', 'content': '你好'}]
+    print(talk_to_chatgpt(messages))
