@@ -43,8 +43,6 @@ def get_api_key(Authorization: str = None):
 async def cc(message: Message, Authorization: Union[str, None] = Header(default=None)):
     api_key = get_api_key(Authorization)
     openai.api_key = api_key
-    logger.info(f'post api_key: {api_key}')
-    logger.info(f'{message.messages}')
     dt = dict()
     try:
         tik = time.time()
@@ -60,21 +58,10 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
         return dt
 
 
-@app.get('/dashboard/billing/credit_grants')
-async def credit_summary(api_key=None):
-    """Get the credit summary for the API key."""
-    url = "https://api.openai.com/dashboard/billing/credit_grants"
-    async with httpx.AsyncClient() as client:
-        response = await client.get(
-            url,
-            headers={"Authorization": f"Bearer {api_key}"},
-            timeout=60,
-        )
-        return response.json()
-
 
 if __name__ == '__main__':
     import uvicorn
 
-    uvicorn.run("app:app", host="0.0.0.0", port=8002, reload=True,
-                ssl_keyfile='./key.pem', ssl_certfile='./cert.pem')
+    # uvicorn.run("app:app", host="0.0.0.0", port=8002, reload=True,
+    #             ssl_keyfile='./key.pem', ssl_certfile='./cert.pem')
+    uvicorn.run("app:app", host="0.0.0.0", port=8002)
