@@ -1,11 +1,14 @@
 import gradio as gr
 import requests
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def talk_to_chatgpt(messages):
+    history_turn=30
     dt = {
         "model": "gpt-3.5-turbo",
-        "messages": ([messages[0]] + messages[-5:]) if len(messages) > 5 else messages,
+        "messages": ([messages[0]] + messages[-history_turn:]) if len(messages) > history_turn else messages,
         "temperature": 1,
         "max_tokens": 512
     }
@@ -37,7 +40,7 @@ with gr.Blocks(css="#chatbot .overflow-y-auto{height:500px}") as demo:
     gr.HTML('<h1 align="center">基于ChatGPT封装接口的聊天机器人</h1>')
     chatbot = gr.Chatbot(elem_id="chatbot")
     messages = gr.State(
-        [{'role': 'system', 'content': '你的名字叫小之，是一个就职于之江实验室的智能机器人，属于智能机器人中心。'}])
+        [{'role': 'system', 'content': '你是一个知识渊博的智能助理'}])
     log = gr.State([])
 
     txt = gr.Textbox(show_label=False, placeholder="输入内容……").style(container=False)
