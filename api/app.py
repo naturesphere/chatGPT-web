@@ -44,21 +44,20 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
     api_key = get_api_key(Authorization)
     logger.info(f'Authorization: {Authorization}, request api_key: {api_key}')
     openai.api_key = api_key
-    dt = dict()
+    response = 'ERROR!!!'
     try:
         logger.info(f'message: {message}')
         tik = time.time()
         parameters = get_parameters(message)
         response = await openai.ChatCompletion.acreate(**parameters, timeout=60)
         tok = time.time()
-        dt = response.json()
-        logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {dt['choices'][0]['message']}")
+        logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {response['choices'][0]['message']}")
     except Exception as e:
         se = str(e)
-        logger.exception('error:')
-        dt = {'error': se}
+        logger.exception('ERROR!!!')
+        response = se
     finally:
-        return dt
+        return response
 
 
 if __name__ == '__main__':
