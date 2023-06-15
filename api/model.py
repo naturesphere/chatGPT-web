@@ -6,6 +6,11 @@ from pydantic import BaseModel, Field
 class Message(BaseModel):
     model: Optional[str] = Field(default="gpt-3.5-turbo", description="Model name")
     messages: list = Field(..., description="Message")
+    functions: list = Field(..., description="a list of functions the model may generate JSON inputs for")
+    function_call: str = Field(..., description="Controls how the model responds to function calls."
+                                                "'none' means the model does not call a function"
+                                                "'auto' means the model can pick between an end-user or calling a function"
+                                                "'none' is the default when no functions are present, 'auto' is the default if functions are present")
     temperature: Optional[float] = Field(default=1.0, description="Temperature")
     top_p: Optional[int] = Field(default=1, description="Top p")
     stream: Optional[bool] = Field(default=False, description='')

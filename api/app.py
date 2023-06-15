@@ -42,9 +42,11 @@ def get_api_key(Authorization: str = None):
 @app.post('/v1/chat/completions')
 async def cc(message: Message, Authorization: Union[str, None] = Header(default=None)):
     api_key = get_api_key(Authorization)
+    logger.info(f'Authorization: {Authorization}, request api_key: {api_key}')
     openai.api_key = api_key
     dt = dict()
     try:
+        logger.info(f'message: {message}')
         tik = time.time()
         response = await openai.ChatCompletion.acreate(**message.dict(), timeout=60)
         tok = time.time()
@@ -52,16 +54,14 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
         logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {dt['choices'][0]['message']}")
     except Exception as e:
         se = str(e)
-        logger.error(se)
+        logger.exception('error:')
         dt = {'error': se}
     finally:
         return dt
 
 
-
 if __name__ == '__main__':
     import uvicorn
 
-    # uvicorn.run("app:app", host="0.0.0.0", port=8002, reload=True,
-    #             ssl_keyfile='./key.pem', ssl_certfile='./cert.pem')
-    uvicorn.run("app:app", host="0.0.0.0", port=8002)
+    uvicorn.run("app:app", host="0.0.0.0", port=8002, reload=True,
+                ssl_keyfile='./key.pem', ssl_certfile='./cert.pem')
