@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class Message(BaseModel):
-    model: Optional[str] = Field(default="gpt-3.5-turbo", description="Model name")
+    model: Optional[str] = Field(default="gpt-3.5-turbo-0613", description="Model name")
     messages: list = Field(..., description="Message")
     functions: Optional[list] = Field(default=[],
                                       description="a list of functions the model may generate JSON inputs for")
