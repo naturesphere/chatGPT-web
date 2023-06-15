@@ -12,7 +12,7 @@ def case_openai_chat():
         "max_tokens": 512
     }
     response = openai.ChatCompletion.create(**dt, timeout=60)
-    print(response.choices[0].message.content)
+    print(response.choices[0].message)
 
 
 def case_openai_function_call():
@@ -35,7 +35,7 @@ def case_openai_function_call():
         "max_tokens": 512
     }
     response = openai.ChatCompletion.create(**dt, timeout=60)
-    print(response.choices[0].message.content)
+    print(response.choices[0].message)
 
 
 if __name__ == '__main__':
