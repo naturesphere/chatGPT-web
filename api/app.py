@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from typing import Union
-from model import Message
+from model import Message, get_parameters
 import aiohttp, asyncio
 import logging, os
 from logging.handlers import RotatingFileHandler
@@ -48,7 +48,8 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
     try:
         logger.info(f'message: {message}')
         tik = time.time()
-        response = await openai.ChatCompletion.acreate(**message.dict(), timeout=60)
+        parameters = get_parameters(message)
+        response = await openai.ChatCompletion.acreate(parameters, timeout=60)
         tok = time.time()
         dt = response.json()
         logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {dt['choices'][0]['message']}")
