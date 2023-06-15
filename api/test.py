@@ -1,9 +1,10 @@
 import openai
-from config import default_config
+from app import get_api_key
+
+openai.api_key = get_api_key()
 
 
 def case_openai_chat():
-    openai.api_key = default_config['api_key']
     dt = {
         "model": "gpt-3.5-turbo",
         "messages": [{'role': 'user', 'content': '你好'}],
@@ -15,7 +16,6 @@ def case_openai_chat():
 
 
 def case_openai_function_call():
-    openai.api_key = default_config['api_key']
     dt = {
         "model": "gpt-3.5-turbo-0613",
         "messages": [{'role': 'user', 'content': 'Send an email to 123456789.com. Tell him to pay my money back!'}],
