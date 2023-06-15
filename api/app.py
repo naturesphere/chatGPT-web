@@ -49,7 +49,7 @@ async def cc(message: Message, Authorization: Union[str, None] = Header(default=
         logger.info(f'message: {message}')
         tik = time.time()
         parameters = get_parameters(message)
-        response = await openai.ChatCompletion.acreate(parameters, timeout=60)
+        response = await openai.ChatCompletion.acreate(**parameters, timeout=60)
         tok = time.time()
         dt = response.json()
         logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {dt['choices'][0]['message']}")
