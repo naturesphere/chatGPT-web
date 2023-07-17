@@ -1,5 +1,6 @@
 import openai
 from app import get_api_key
+import os
 
 openai.api_key = get_api_key()
 

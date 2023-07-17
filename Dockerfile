@@ -7,4 +7,5 @@ RUN cd /app/web && pnpm install && pnpm run build
 RUN cp -r /app/web/dist /app/api/dist
 RUN cd /app/api && pip install -r requirements.txt
 
-CMD ["/bin/bash", "start.sh"]
+CMD ["/bin/bash", "start.sh"]ps
+sss
