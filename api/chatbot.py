@@ -12,7 +12,7 @@ def talk_to_chatgpt(messages):
         "temperature": 1,
         "max_tokens": 512
     }
-    API_URL = 'https://8.219.97.149:8000/v1/chat/completions'
+    API_URL = 'https://127.0.0.1:8000/v1/chat/completions'
     message = {'role': 'assistant', 'content': ''}
     try:
         x = requests.post(API_URL, json=dt, stream=True, verify=False)
