@@ -40,15 +40,15 @@ def get_api_key(Authorization: str = None):
 
 
 @app.post('/v1/chat/completions')
-async def cc(message: Message, Authorization: Union[str, None] = Header(default=None)):
+async def cc(request: Request, Authorization: Union[str, None] = Header(default=None)):
     api_key = get_api_key(Authorization)
     logger.info(f'Authorization: {Authorization}, request api_key: {api_key}')
     openai.api_key = api_key
     response = 'ERROR!!!'
     try:
-        logger.info(f'message: {message}')
+        parameters = await request.json()
+        logger.info(f'parameters: {parameters}')
         tik = time.time()
-        parameters = get_parameters(message)
         response = await openai.ChatCompletion.acreate(**parameters, timeout=60)
         tok = time.time()
         logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {response['choices'][0]['message']}")
