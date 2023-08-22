@@ -60,6 +60,28 @@ async def cc(request: Request, Authorization: Union[str, None] = Header(default=
         return response
 
 
+@app.post('/v1/completions')
+async def completion_server(request: Request, Authorization: Union[str, None] = Header(default=None)):
+    api_key = get_api_key(Authorization)
+    logger.info(f'Authorization: {Authorization}, request api_key: {api_key}')
+    openai.api_key = api_key
+    response = 'ERROR!!!'
+    try:
+        parameters = await request.json()
+        logger.info(f'parameters: {parameters}')
+        tik = time.time()
+        response = await openai.Completion.acreate(**parameters, timeout=300)
+        tok = time.time()
+        logger.info(f"elapsed: {tok - tik:.3f}s")
+    except Exception as e:
+        se = str(e)
+        logger.exception('ERROR!!!')
+        response = se
+    finally:
+        return response
+
+
+
 @app.get('/alive')
 def alive():
     return True
