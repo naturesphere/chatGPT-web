@@ -1,5 +1,5 @@
 import os
-import openai
+from openai import AsyncOpenAI
 from fastapi import FastAPI, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
@@ -43,13 +43,13 @@ def get_api_key(Authorization: str = None):
 async def cc(request: Request, Authorization: Union[str, None] = Header(default=None)):
     api_key = get_api_key(Authorization)
     logger.info(f'Authorization: {Authorization}, request api_key: {api_key}')
-    openai.api_key = api_key
+    client = AsyncOpenAI(api_key=api_key)
     response = 'ERROR!!!'
     try:
         parameters = await request.json()
         logger.info(f'parameters: {parameters}')
         tik = time.time()
-        response = await openai.ChatCompletion.acreate(**parameters, timeout=60)
+        response = await client.chat.completions.create(**parameters, timeout=60)
         tok = time.time()
         logger.info(f"elapsed: {tok - tik:.3f}s, 回复: {response['choices'][0]['message']}")
     except Exception as e:
